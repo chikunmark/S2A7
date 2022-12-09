@@ -29,5 +29,6 @@ npm run dev
 ```
 http://localhost:3000
 ```
+5. 若遇停止環境 (停用專案)，請在終端機按下 Ctrl + C (windows)，或其 OS 的相應按鍵
 
 謝謝您！
