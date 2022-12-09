@@ -46,3 +46,5 @@ app.get('/search', (req, res) => {
 app.listen(port, () => {
   console.log(`Express is listening on http://localhost:${port}`)
 })
+
+// static files
