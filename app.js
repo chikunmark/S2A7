@@ -21,9 +21,10 @@ app.get('/', (req, res) => {
 app.get('/search', (req, res) => {
   // console.log('小寫搜尋', req.query.keyword.toLocaleLowerCase())
   const cssName = 'index'
+  const wordForSearch = req.query.keyword.trim().toLocaleLowerCase()
   const filteredShops = shop_json.results.filter((shop) => {
     // console.log('小寫店名', shop.name.toLowerCase())
-    return shop.name.toLowerCase().includes(req.query.keyword.toLocaleLowerCase())
+    return shop.name.toLowerCase().includes(wordForSearch) || shop.category.toLowerCase().includes(wordForSearch)
   })
   // console.log(filteredShops)
   res.render('index', { shops: filteredShops, keyword: req.query.keyword, name: cssName })
