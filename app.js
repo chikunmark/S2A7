@@ -1,8 +1,26 @@
 const express = require('express')
-const app = express() // 為什麼不把這兩行直接合成 const app = require('express')
+const app = express() // 為什麼不把這兩行直接合成 const app = require('express')，試了，就是不行，官網也沒說原因，隨便 (攤手)
 const port = 3000
 const exphbs = require('express-handlebars') // require handlebars
-const shop_json = require('./restaurant.json') // 引入 json 檔
+const shop_json = require('./models/seeds/restaurant.json') // 引入 json 檔
+
+const mongoose = require('mongoose')
+// 敏感資料，之後移動
+const MONGODB_URI = 'mongodb+srv://alpha:camp@cluster0.ke4xjxv.mongodb.net/S2A7-shop-list?retryWrites=true&w=majority'
+// 加入這段 code, 僅在非正式環境時, 使用 dotenv
+if (process.env.NODE_ENV !== 'production') {
+  require('dotenv').config()
+}
+mongoose.connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true }) // 設定連線到 mongoDB
+const db = mongoose.connection
+
+db.on('error', () => {
+  console.log('mongodb error!!')
+})
+db.once('open', () => {
+  // 因只會發生一次，所以用 once
+  console.log('mongoDB connected!!')
+})
 
 app.engine('handlebars', exphbs({ defaultLayout: 'main' })) // 我猜是指 指定模板引擎，並指定副檔名
 app.set('view engine', 'handlebars')
