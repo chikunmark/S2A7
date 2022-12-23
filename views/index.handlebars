@@ -17,13 +17,13 @@
 
 <!-- restaurant list -->
 <div class='container mt-5'>
-  <p>敬請點擊店家任意處，查看詳細資料</p>
+  <p>若須查看詳細資料，敬請點擊店家任意處</p>
   <div class='row'>
     <div class='col-md-10 col-12 mx-auto'>
       <div class='row row-cols-sm-3'>
         {{#each shops}}
           {{! 引入 json 內陣列，遞迴該陣列次數 }}
-          <a href='/restaurants/{{this.id}}' class='text-secondary'>
+          <a href='/restaurants/{{this._id}}' class='text-secondary'>
             <div class='card mb-3'>
               <img class='card-img-top' src='{{this.image}}' alt='{{this.name}}' />
               <div class='card-body p-3'>
@@ -45,6 +45,9 @@
 
                 <form action='/restaurants/edit/{{this.id}}' method='GET' style='display: inline;'>
                   <button type='submit'>Edit-test</button>
+                </form>
+                <form action='/restaurants/delete/{{this._id}}' method='POST' style='display: inline;'>
+                  <button type='submit'>Delete-test</button>
                 </form>
               </div>
             </div>
