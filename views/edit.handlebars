@@ -50,9 +50,16 @@
     {{! 原來還有這一招 }}
     <button type='reset' class='btn btn-outline-danger'>重新輸入</button>
 
+    {{! 不知為何，<a> 跟 <button> 的 width 不同 }}
     <a href='/'>
       <button type='button' class='btn btn-secondary'>回清單</button>
     </a>
+
+    {{#if shop.id}}
+      <a href='/restaurants/{{shop._id}}'>
+        <button type='button' class='btn btn-secondary'>回店家詳細資料</button>
+      </a>
+    {{/if}}
 
   </form>
 </div>

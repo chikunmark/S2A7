@@ -2,6 +2,9 @@ header {
   overflow: hidden;
 }
 
+a {
+  text-decoration: none;
+}
 .navbar .navbar-brand {
   color: #4592af;
 }

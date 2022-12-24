@@ -43,10 +43,9 @@ app.get('/', (req, res) => {
     .lean()
     .then(shops => res.render('index', { name: cssName, shops: shops }))
     .catch(error => console.error(error))
-
-  // res.render('index', { shops: shop_json.results, name: cssName })
 })
 
+// 搜尋功能、路由
 app.get('/search', (req, res) => {
   // console.log('小寫搜尋', req.query.keyword.toLocaleLowerCase())
   const cssName = 'index'
@@ -57,7 +56,7 @@ app.get('/search', (req, res) => {
     return res.redirect('/')
   }
 
-  // 答案是從 DB 取下來再處理，我原本是想直接找到相符的再取下來
+  // 答案是從 DB 取下來再處理，我原本是想直接在 DB 找到相符的再取下來
   Shop.find()
     .lean()
     .then(shopArray => {
@@ -67,17 +66,6 @@ app.get('/search', (req, res) => {
       res.render('index', { shops: filtershopData, keyword: req.query.keyword, name: cssName })
     })
     .catch(err => console.log(err))
-
-  // const filteredShops = shop_json.results.filter(shop => {
-  //   // console.log('小寫店名', shop.name.toLowerCase())
-  //   return shop.name.toLowerCase().includes(wordForSearch) || shop.category.toLowerCase().includes(wordForSearch)
-  // })
-  // // console.log(filteredShops)
-  // res.render('index', {
-  //   shops: filteredShops,
-  //   keyword: req.query.keyword,
-  //   name: cssName,
-  // })
 })
 
 // 顯示單一店面細節
@@ -90,32 +78,22 @@ app.get('/restaurants/:_id', (req, res) => {
     .lean()
     .then(shopArray => res.render('show', { name: cssName, shop: shopArray }))
     .catch(err => console.error(err)) // 為何不省略函式，直接寫 console.log(err) ??
-  // const index = Number(req.params.id) - 1
-  // res.render('show', { shop: shop_json.results[index], name: cssName })
 })
 
 // 新增店家頁面
 app.get('/newshop', (req, res) => {
-  // console.log(req.params.id)
   const cssName = 'show'
   const title = '新增一間餐廳'
   const action = '/create-new-record'
   res.render('edit', { name: cssName, title, action })
-
-  // const index = Number(req.params.id) - 1
-  // res.render('edit', { shop: shop_json.results[index], name: cssName })
 })
 
 // 傳送新增資料
 app.post('/create-new-record', (req, res) => {
   // console.log(req.body)
-
-  Shop.create(req.body)
+  return Shop.create(req.body)
     .then(res.redirect('/'))
     .catch(err => console.error(err))
-
-  // console.log(req.body)
-  // res.redirect('/')
 })
 
 // 渲染 edit 頁面資料
@@ -125,7 +103,6 @@ app.get('/restaurants/edit/:_id', (req, res) => {
   const title = '編輯餐廳細節'
   const _id = req.params._id
   const action = `/update/${_id}`
-  // console.log(_id) // 檢查用
   return (
     Shop.findById(_id)
       .lean()
@@ -135,40 +112,34 @@ app.get('/restaurants/edit/:_id', (req, res) => {
         res.render('edit', { shop, title, action, name: cssName })
       })
   )
-
-  // const index = Number(req.params.id) - 1
-  // res.render('edit', { shop: shop_json.results[index], name: cssName })
 })
 
 // 送出更新餐廳資料
 app.post('/update/:_id', (req, res) => {
   const updateArray = req.body
   const _id = req.params._id
-  console.log('更新用資料', updateArray)
-  console.log('')
-  console.log('')
 
-  return Shop.findById(_id)
-    .then(shop => {
-      shop.name = updateArray.name
-      shop.name_en = updateArray.name_en
-      shop.category = updateArray.category
-      shop.image = updateArray.image
-      shop.location = updateArray.location
-      shop.phone = updateArray.phone
-      shop.google_map = updateArray.google_map
-      shop.rating = updateArray.rating
-      shop.description = updateArray.description
-
-      return shop.save()
-    })
-    .then(res.redirect(`/restaurants/${_id}`))
-    .catch(err => console.error(err))
-
-  // 解答的方法 (超簡潔齁，以前沒教 TAT)
-  // return Shop.findByIdAndUpdate(_id, updateArray)
+  // 老方法，有用，但很冗
+  // return Shop.findById(_id)
+  //   .then(shop => {
+  //     shop.name = updateArray.name
+  //     shop.name_en = updateArray.name_en
+  //     shop.category = updateArray.category
+  //     shop.image = updateArray.image
+  //     shop.location = updateArray.location
+  //     shop.phone = updateArray.phone
+  //     shop.google_map = updateArray.google_map
+  //     shop.rating = updateArray.rating
+  //     shop.description = updateArray.description
+  //     return shop.save()
+  //   })
   //   .then(res.redirect(`/restaurants/${_id}`))
   //   .catch(err => console.error(err))
+
+  // 解答的方法 (超簡潔齁，以前沒教 TAT)
+  return Shop.findByIdAndUpdate(_id, updateArray)
+    .then(res.redirect(`/restaurants/${_id}`))
+    .catch(err => console.error(err))
 })
 
 // 刪除餐廳功能 (先用 method = post)
