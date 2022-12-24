@@ -34,16 +34,16 @@
                   {{this.category}}
                 </div>
 
-                <span class='badge badge-pill badge-danger font-weight-normal'>
-                  {{this.rating}}
+                <span class='badge rounded-pill text-bg-light font-weight-normal'>
                   <i class='fas fa-star fa-xs'></i>
+                  {{this.rating}}
                 </span>
 
                 <div class='restaurant-category mb-1'>
                   Edit
                 </div>
 
-                <form action='/restaurants/edit/{{this.id}}' method='GET' style='display: inline;'>
+                <form action='/restaurants/edit/{{this._id}}' method='GET' style='display: inline;'>
                   <button type='submit'>Edit-test</button>
                 </form>
                 <form action='/restaurants/delete/{{this._id}}' method='POST' style='display: inline;'>

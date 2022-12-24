@@ -1,38 +1,58 @@
-<div>
-  <form>
+<h1 class='mb-1 restaurant-show-title'>{{title}}</h1>
+<div class='container'>
+  <form method='post' action='{{action}}'>
     <div class='mb-3'>
-      <label for='shopName' class='form-label'>Email address</label>
-      <input type='text' class='form-control' id='shopName' aria-describedby='emailHelp' />
-      <div id='emailHelp' class='form-text'>店名</div>
+      <label for='name' class='form-label'>店名<span style='color: red;'>*必填</span></label>
+      <input type='text' class='form-control' id='name' name='name' aria-describedby='shopName' placeholder='摩斯漢堡' value='{{shop.name}}' required />
     </div>
     <div class='mb-3'>
-      <label for='shopName-en' class='form-label'>英文店名</label>
-      <input type='text' class='form-control' id='shopName-en' />
+      <label for='name_en' class='form-label'>英文店名</label>
+      <input type='text' class='form-control' id='name_en' name='name_en' placeholder='Mos Burger' value='{{shop.name_en}}' />
     </div>
     <div class='mb-3'>
-      <label for='category' class='form-label'>Password</label>
-      <input type='text' class='form-control' id='category' />
+      <label for='category' class='form-label'>餐點類型<span style='color: red;'>*必填</span></label>
+      <input list='category-list' class='form-control' id='category' name='category' placeholder='港式飲茶' value='{{shop.category}}' required />
+      <datalist id='category-list'>
+        <option value='中東料理'>中東料理</option>
+        <option value='義式'>義式</option>
+        <option value='日式'>日式</option>
+        <option value='美式'>美式</option>
+        <option value='酒吧'>酒吧</option>
+        <option value='咖啡'>咖啡</option>
+      </datalist>
     </div>
     <div class='mb-3'>
-      <label for='location' class='form-label'>地址</label>
-      <input type='text' class='form-control' id='location' />
+      <label for='image' class='form-label'>餐廳圖片 (請填圖片網址)</label>
+      <input type='url' class='form-control' id='image' name='image' value='{{shop.image}}' />
     </div>
     <div class='mb-3'>
-      <label for='phone' class='form-label'>電話</label>
-      <input type='text' class='form-control' id='phone' />
+      <label for='location' class='form-label'>地址<span style='color: red;'>*必填</span></label>
+      <input type='text' class='form-control' id='location' name='location' value='{{shop.location}}' required />
     </div>
     <div class='mb-3'>
-      <label for='location' class='form-label'>地址</label>
-      <input type='text' class='form-control' id='location' />
+      <label for='phone' class='form-label'>電話<span style='color: red;'>*必填</span></label>
+      <input type='text' class='form-control' id='phone' name='phone' placeholder='02-34567890' value='{{shop.phone}}' required />
+    </div>
+    <div class='mb-3'>
+      <label for='google_map' class='form-label'>Google 地圖連結 (請填網址)</label>
+      <input type='url' class='form-control' id='google_map' name='google_map' value='{{shop.google_map}}' />
+    </div>
+    <div class='mb-3'>
+      <label for='rating' class='form-label'>評分 (1~5)</label>
+      <input type='number' min='1' max='5' step='0.1' class='form-control' id='rating' name='rating' placeholder='1.7' value='{{shop.rating}}' />
     </div>
     <div class='mb-3'>
       <label for='description' class='form-label'>敘述</label>
-      <textarea name='description' id='description' cols='30' rows='7'></textarea>
-    </div>
-    <div class='mb-3 form-check'>
-      <input type='checkbox' class='form-check-input' id='exampleCheck1' />
-      <label class='form-check-label' for='exampleCheck1'>Check me out</label>
+      <textarea class='form-control' id='description' name='description' cols='50' rows='5'>{{shop.description}}</textarea>
     </div>
     <button type='submit' class='btn btn-primary'>Submit</button>
+
+    {{! 原來還有這一招 }}
+    <button type='reset' class='btn btn-outline-danger'>重新輸入</button>
+
+    <a href='/'>
+      <button type='button' class='btn btn-secondary'>回清單</button>
+    </a>
+
   </form>
 </div>

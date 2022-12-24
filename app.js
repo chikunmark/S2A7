@@ -1,6 +1,6 @@
 const express = require('express')
 const app = express() // 為什麼不把這兩行直接合成 const app = require('express')，試了，就是不行，官網也沒說原因，隨便 (攤手)
-const port = 3000
+const port = 8080
 const exphbs = require('express-handlebars') // require handlebars
 const shop_json = require('./models/seeds/restaurant.json') // 引入 json 檔
 
@@ -30,6 +30,7 @@ app.set('view engine', 'handlebars')
 // setting static file 是啥意呢？
 app.use(express.static('public'))
 // 只知道是導入 public 資料夾，導入 JS, CSS 等，但裡面的 static 到底是啥意呢？
+app.use(express.urlencoded({ extended: true })) // 藉 express 內建的 body parser 分析 post 內容
 
 // routes setting
 // 首頁的路由
@@ -79,6 +80,7 @@ app.get('/search', (req, res) => {
   // })
 })
 
+// 顯示單一店面細節
 app.get('/restaurants/:_id', (req, res) => {
   // console.log(req.params.id)
   const cssName = 'show'
@@ -86,31 +88,96 @@ app.get('/restaurants/:_id', (req, res) => {
 
   Shop.findById(_id)
     .lean()
-    // .then(shopArray => res.render('show', { name: cssName, shop: shopArray }))
-    .then(shopArray => res.render('show'))
+    .then(shopArray => res.render('show', { name: cssName, shop: shopArray }))
     .catch(err => console.error(err)) // 為何不省略函式，直接寫 console.log(err) ??
   // const index = Number(req.params.id) - 1
   // res.render('show', { shop: shop_json.results[index], name: cssName })
 })
 
-// 渲染 edit 頁面資料
-app.get('/restaurants/edit/:id', (req, res) => {
+// 新增店家頁面
+app.get('/newshop', (req, res) => {
   // console.log(req.params.id)
   const cssName = 'show'
-  const index = Number(req.params.id) - 1
-  res.render('edit', { shop: shop_json.results[index], name: cssName })
+  const title = '新增一間餐廳'
+  const action = '/create-new-record'
+  res.render('edit', { name: cssName, title, action })
+
+  // const index = Number(req.params.id) - 1
+  // res.render('edit', { shop: shop_json.results[index], name: cssName })
 })
 
-// 製作 delete 功能 (先用 method = post)
-app.post('/restaurants/delete/:id', (req, res) => {
-  const id = req.params.id
+// 傳送新增資料
+app.post('/create-new-record', (req, res) => {
+  // console.log(req.body)
+
+  Shop.create(req.body)
+    .then(res.redirect('/'))
+    .catch(err => console.error(err))
+
+  // console.log(req.body)
+  // res.redirect('/')
+})
+
+// 渲染 edit 頁面資料
+app.get('/restaurants/edit/:_id', (req, res) => {
+  // console.log(req.params.id)
+  const cssName = 'show'
+  const title = '編輯餐廳細節'
+  const _id = req.params._id
+  const action = `/update/${_id}`
+  // console.log(_id) // 檢查用
   return (
-    Shop.findById(id) // 從 DB 的 "_id" 去尋找
-      // .then(console.log(id)) // 想先測試下，有結果就殺
-      .then(shop => shop.remove())
-      .then(() => res.redirect('/'))
-      .catch(error => console.error(error))
+    Shop.findById(_id)
+      .lean()
+      // .then(shop => console.log(shop))
+      .then(shop => {
+        // console.log(shop) //檢查用
+        res.render('edit', { shop, title, action, name: cssName })
+      })
   )
+
+  // const index = Number(req.params.id) - 1
+  // res.render('edit', { shop: shop_json.results[index], name: cssName })
+})
+
+// 送出更新餐廳資料
+app.post('/update/:_id', (req, res) => {
+  const updateArray = req.body
+  const _id = req.params._id
+  console.log('更新用資料', updateArray)
+  console.log('')
+  console.log('')
+
+  return Shop.findById(_id)
+    .then(shop => {
+      shop.name = updateArray.name
+      shop.name_en = updateArray.name_en
+      shop.category = updateArray.category
+      shop.image = updateArray.image
+      shop.location = updateArray.location
+      shop.phone = updateArray.phone
+      shop.google_map = updateArray.google_map
+      shop.rating = updateArray.rating
+      shop.description = updateArray.description
+
+      return shop.save()
+    })
+    .then(res.redirect(`/restaurants/${_id}`))
+    .catch(err => console.error(err))
+
+  // 解答的方法 (超簡潔齁，以前沒教 TAT)
+  // return Shop.findByIdAndUpdate(_id, updateArray)
+  //   .then(res.redirect(`/restaurants/${_id}`))
+  //   .catch(err => console.error(err))
+})
+
+// 刪除餐廳功能 (先用 method = post)
+app.post('/restaurants/delete/:_id', (req, res) => {
+  const _id = req.params._id
+  return Shop.findById(_id) // 從 DB 的 "_id" 去尋找
+    .then(shop => shop.remove())
+    .then(() => res.redirect('/'))
+    .catch(error => console.error(error))
 })
 
 app.listen(port, () => {

@@ -24,6 +24,14 @@
 
       <p class='mb-1'>
         <span class='text-secondary'>
+          <i class='fas fa-solid fa-star pr-2'></i>
+          評分：
+        </span>
+        {{shop.rating}}
+      </p>
+
+      <p class='mb-1'>
+        <span class='text-secondary'>
           <i class='fas fa-mobile-alt pr-2'></i>
           電話：
         </span>
@@ -32,12 +40,7 @@
 
       <p class='mb-5'>{{shop.description}}</p>
 
-      <img
-        class='rounded mx-auto d-block mb-4 w-100'
-        src='{{shop.image}}'
-        alt='{{shop.name}}'
-        style='max-width: 600px;'
-      />
+      <img class='rounded mx-auto d-block mb-4 w-100' src='{{shop.image}}' alt='{{shop.name}}' style='max-width: 600px;' />
     </div>
   </div>
 </div>
